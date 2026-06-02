@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>$ecret</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="carrito">
+    🛒 Productos en carrito:
+    <span id="cantidad">0</span>
+    </div>
+
+    <header>
+    <div class="logo">$ecret</div>
+
+    <p class="descripcion">
+        Hola somos $ecret, una marca de ropa emergente que fusiona el estilo
+        urbano con los grandes misterios de la historia. Creamos bienes de
+        especialidad exclusivos, como buzos y remeras de alta calidad, validados
+        mediante certificados de autenticidad que garantizan que posees una
+        pieza de colección única.
+    </p>
+
+    <div class="instagram">
+        Instagram:
+        <a href="https://www.instagram.com/_secret.brand_/" target="_blank">
+        @_secret.brand_
+        </a>
+    </div>
+    </header>
+
+    <section class="productos">
+    <div class="card">
+        <img src="remeranegra.jpeg" alt="Remera Negra" />
+        <div class="info">
+        <h3>Remera Negra</h3>
+        <div class="precio">$40.000</div>
+        <button onclick="agregar('Remera Negra', 40000)">
+            Agregar al carrito
+        </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="remerablanca.jpeg" alt="Remera Blanca" />
+        <div class="info">
+        <h3>Remera Blanca</h3>
+        <div class="precio">$40.000</div>
+        <button onclick="agregar('Remera Blanca', 40000)">
+            Agregar al carrito
+        </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="buzonegro.jpeg" alt="Buzo Negro" />
+        <div class="info">
+        <h3>Buzo Negro</h3>
+        <div class="precio">$50.000</div>
+        <button onclick="agregar('Buzo Negro', 50000)">
+            Agregar al carrito
+        </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="buzoblanco.jpeg" alt="Buzo Blanco" />
+        <div class="info">
+        <h3>Buzo Blanco</h3>
+        <div class="precio">$50.000</div>
+        <button onclick="agregar('Buzo Blanco', 50000)">
+            Agregar al carrito
+        </button>
+        </div>
+    </div>
+    </section>
+
+    <div id="resumen">
+    <h2>Carrito</h2>
+
+    <div id="lista"></div>
+
+    <br />
+
+    <h3>
+        Total: $
+        <span id="total">0</span>
+    </h3>
+
+    <br />
+
+    <button onclick="mostrarFormulario()">Finalizar operación</button>
+    </div>
+
+    <div id="checkout">
+    <h2>Datos del comprador</h2>
+
+    <input type="text" placeholder="Nombre" required />
+    <input type="text" placeholder="Apellido" required />
+    <input type="email" placeholder="Mail" required />
+    <input type="tel" placeholder="Número de teléfono" required />
+
+    <br />
+
+    <button onclick="mostrarPago()">Continuar al pago</button>
+    </div>
+
+    <div id="pago">
+    <h2>Pago</h2>
+
+    <p>
+        Total a pagar:
+        <strong>$<span id="totalPago">0</span></strong>
+    </p>
+
+    <br/>
+
+    <input placeholder="Número de tarjeta" />
+    <input placeholder="Nombre del titular" />
+    <input placeholder="Fecha de vencimiento" />
+    <input placeholder="CVV" />
+
+    <br />
+
+    <button onclick="confirmarPago()">Confirmar pago</button>
+    </div>
+
+    <footer>
+    © 2026 $ecret
+    <br /><br />
+    Secrets Are Not Lost
+    </footer>
+
+    <script>
+    let carrito = [];
+
+    function agregar(nombre, precio) {
+        carrito.push({
+        nombre: nombre,
+        precio: precio,
+        });
+
+        actualizarCarrito();
+    }
+
+    function eliminar(index) {
+        carrito.splice(index, 1);
+
+        actualizarCarrito();
+    }
+
+    function actualizarCarrito() {
+        let total = 0;
+
+        document.getElementById("lista").innerHTML = "";
+
+        carrito.forEach((producto, index) => {
+        total += producto.precio;
+
+        document.getElementById("lista").innerHTML += `
+<div class="itemCarrito">
+
+<span>
+${producto.nombre} - $${producto.precio.toLocaleString("es-AR")}
+</span>
+
+<button
+class="btnEliminar"
+onclick="eliminar(${index})">
+❌ Quitar
+</button>
+
+</div>
+`;
+        });
+
+        document.getElementById("cantidad").innerText = carrito.length;
+
+        document.getElementById("total").innerText =
+        total.toLocaleString("es-AR");
+    }
+
+    function mostrarFormulario() {
+        if (carrito.length === 0) {
+        alert("Agrega al menos un producto.");
+
+        return;
+        }
+
+        document.getElementById("checkout").style.display = "block";
+
+        document.getElementById("checkout").scrollIntoView({
+        behavior: "smooth",
+        });
+    }
+
+    function mostrarPago() {
+        let total = 0;
+
+        carrito.forEach((producto) => {
+        total += producto.precio;
+        });
+
+        document.getElementById("totalPago").innerText =
+        total.toLocaleString("es-AR");
+
+        document.getElementById("pago").style.display = "block";
+
+        document.getElementById("pago").scrollIntoView({
+        behavior: "smooth",
+        });
+    }
+
+    function confirmarPago() {
+        alert("Pago realizado con éxito");
+        carrito = [];
+        actualizarCarrito();
+        document.getElementById("checkout").style.display = "none";
+        document.getElementById("pago").style.display = "none";
+        document.getElementById("totalPago").innerText = "0";
+        document.getElementById("lista").innerHTML = "";
+        document.getElementById("total").innerText = "0";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        // Reseteo para simular que la compra fue realizada
+    }
+    </script>
+</body>
+</html>
